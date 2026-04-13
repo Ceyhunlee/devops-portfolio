@@ -1,0 +1,17 @@
+#!/bin/bash
+echo "========================================="
+echo "         DOCKER DURUM RAPORU"
+echo "========================================="
+echo "Tarih: $(date)"
+echo ""
+echo "--- Çalışan Container'lar ---"
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+echo ""
+echo "--- Tüm Container'lar ---"
+docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
+echo ""
+echo "--- Docker Image'lar ---"
+docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+echo ""
+echo "--- Disk Kullanımı ---"
+docker system df
