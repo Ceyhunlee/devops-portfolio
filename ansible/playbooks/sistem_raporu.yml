@@ -1,0 +1,31 @@
+---
+- name: Kapsamlı Sistem Raporu
+  hosts: all
+  tasks:
+    - name: Tarih ve saat
+      command: date
+      register: tarih
+    - name: Sistem bilgileri
+      debug:
+        msg:
+          - "SUNUCU: {{ ansible_hostname }}"
+          - "IP: {{ ansible_default_ipv4.address }}"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Kernel: {{ ansible_kernel }}"
+    - name: RAM bilgisi
+      debug:
+        msg:
+          - "Toplam RAM: {{ (ansible_memtotal_mb / 1024) | round(1) }} GB"
+          - "Bos RAM: {{ (ansible_memfree_mb / 1024) | round(1) }} GB"
+    - name: Disk bilgisi
+      command: df -h /
+      register: disk
+    - name: Disk durumu
+      debug:
+        msg: "{{ disk.stdout_lines }}"
+    - name: Calisan servis sayisi
+      shell: systemctl list-units --type=service --state=running | grep -c running
+      register: servis_sayisi
+    - name: Servis raporu
+      debug:
+        msg: "Calisan servis sayisi: {{ servis_sayisi.stdout }}"

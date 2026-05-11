@@ -1,0 +1,24 @@
+---
+- name: İlk Ansible Playbook
+  hosts: all
+  tasks:
+
+    - name: Sistem bilgilerini göster
+      debug:
+        msg: "Sunucu: {{ ansible_hostname }} | IP: {{ ansible_default_ipv4.address }} | OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Uptime kontrolü
+      command: uptime
+      register: uptime_sonuc
+
+    - name: Uptime sonucunu göster
+      debug:
+        msg: "{{ uptime_sonuc.stdout }}"
+
+    - name: Disk kullanımını göster
+      command: df -h /
+      register: disk_sonuc
+
+    - name: Disk sonucunu göster
+      debug:
+        msg: "{{ disk_sonuc.stdout_lines }}"
