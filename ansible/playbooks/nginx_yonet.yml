@@ -1,0 +1,32 @@
+---
+- name: Nginx Yönetim Playbook
+  hosts: all
+  tasks:
+
+    - name: Nginx kurulu mu kontrol et
+      command: nginx -v
+      register: nginx_versiyon
+      ignore_errors: yes
+
+    - name: Nginx versiyon bilgisi
+      debug:
+        msg: "Nginx durumu: {{ nginx_versiyon.stderr }}"
+      when: nginx_versiyon.rc == 0
+
+    - name: Nginx servisi çalışıyor mu?
+      service_facts:
+
+    - name: Nginx servis durumu
+      debug:
+        msg: "Nginx servisi: {{ ansible_facts.services['nginx.service'].state }}"
+      when: "'nginx.service' in ansible_facts.services"
+
+    - name: Nginx konfigürasyonunu test et
+      command: nginx -t
+      register: nginx_test
+      ignore_errors: yes
+
+    - name: Nginx test sonucu
+      debug:
+        msg: "{{ nginx_test.stderr }}"
+      when: nginx_test.rc == 0
